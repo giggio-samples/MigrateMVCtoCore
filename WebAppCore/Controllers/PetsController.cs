@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
 using WebApp.Data;
 using WebApp.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Controllers
 {
     public class PetsController : Controller
     {
-        private WebAppContext db = new WebAppContext();
+        private readonly WebAppContext db;
+
+        public PetsController(WebAppContext db)
+        {
+            this.db = db;
+        }
 
         // GET: Pets
         public ActionResult Index()
@@ -26,12 +30,12 @@ namespace WebApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
             Pet pet = db.Pets.Find(id);
             if (pet == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(pet);
         }
@@ -47,7 +51,7 @@ namespace WebApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Pet pet)
+        public ActionResult Create([FromForm] Pet pet)
         {
             if (ModelState.IsValid)
             {
@@ -64,12 +68,12 @@ namespace WebApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
             Pet pet = db.Pets.Find(id);
             if (pet == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(pet);
         }
@@ -79,7 +83,7 @@ namespace WebApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Pet pet)
+        public ActionResult Edit([FromForm] Pet pet)
         {
             if (ModelState.IsValid)
             {
@@ -95,12 +99,12 @@ namespace WebApp.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
             Pet pet = db.Pets.Find(id);
             if (pet == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(pet);
         }
